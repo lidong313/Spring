@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		">
+        <!--shiro与spring组合-->
+        <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+            <property name="securityManager" ref="securityManager"></property>
+            <!--使用shiro内置过滤器拦截资源-->
+            <property name="filterChainDefinitions">
+                <value>
+                    <!--放行某个页面-->
+                    /jsps/product/add.jsp=anon
+                    /user/login.do=anon
+                    /jsps/product/update.jsp=perms[product:update]
+                    /jsps/product/showall.jsp=roles[admin]
+                    <!--所有页面都拦截-->
+                    /**=authc
+                </value>
+            </property>
+            <!--修改shiro默认登录请求-->
+            <property name="loginUrl" value="/jsps/product/login.jsp"></property>
+            <!--添加未授权提示页面-->
+            <property name="unauthorizedUrl" value="/jsps/unauth.jsp"></property>
+
+
+        </bean>
+        <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+            <property name="realm" ref="realm"></property>
+        </bean>
+        <bean id="realm" class="com.realm.MyRealm"></bean>
+
+
+
+
+
+
+
+
+
+
+</beans>
